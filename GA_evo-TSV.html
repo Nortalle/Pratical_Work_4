@@ -2,7 +2,7 @@
 <html>
 <head><meta charset="utf-8" />
 
-<title>GA_evo-binaryMaxFunc</title>
+<title>GA_evo-TSV</title>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.1.10/require.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
@@ -13089,7 +13089,7 @@ div#notebook {
 
 <!-- Loading mathjax macro -->
 <!-- Load mathjax -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS_HTML"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS_HTML"></script>
     <!-- MathJax configuration -->
     <script type="text/x-mathjax-config">
     MathJax.Hub.Config({
@@ -13122,29 +13122,94 @@ div#notebook {
 <span class="kn">from</span> <span class="nn">pyevolve</span> <span class="kn">import</span> <span class="n">GSimpleGA</span>
 <span class="kn">from</span> <span class="nn">pyevolve</span> <span class="kn">import</span> <span class="n">Selectors</span>
 <span class="kn">from</span> <span class="nn">pyevolve</span> <span class="kn">import</span> <span class="n">Statistics</span>
+<span class="kn">from</span> <span class="nn">pyevolve</span> <span class="kn">import</span> <span class="n">G1DList</span>
+<span class="kn">from</span> <span class="nn">pyevolve</span> <span class="kn">import</span> <span class="n">G1DList</span>
+<span class="kn">from</span> <span class="nn">pyevolve</span> <span class="kn">import</span> <span class="n">GSimpleGA</span>
+<span class="kn">from</span> <span class="nn">pyevolve</span> <span class="kn">import</span> <span class="n">GAllele</span>
+<span class="kn">from</span> <span class="nn">pyevolve</span> <span class="kn">import</span> <span class="n">Mutators</span>
+<span class="kn">from</span> <span class="nn">pyevolve</span> <span class="kn">import</span> <span class="n">Initializators</span>
+<span class="kn">from</span> <span class="nn">pyevolve</span> <span class="kn">import</span> <span class="n">DBAdapters</span>
+<span class="kn">from</span> <span class="nn">pyevolve</span> <span class="kn">import</span> <span class="n">Crossovers</span>
+<span class="kn">from</span> <span class="nn">pyevolve</span> <span class="kn">import</span> <span class="n">Consts</span>
+<span class="kn">from</span> <span class="nn">sys</span> <span class="kn">import</span> <span class="nb">exit</span>
+<span class="kn">from</span> <span class="nn">pyevolve</span> <span class="kn">import</span> <span class="n">DBAdapters</span>
+<span class="kn">import</span> <span class="nn">sys</span><span class="o">,</span> <span class="nn">random</span>
+<span class="kn">from</span> <span class="nn">math</span> <span class="kn">import</span> <span class="n">sqrt</span>
+<span class="kn">import</span> <span class="nn">geopy.distance</span>
+<span class="o">%</span><span class="k">matplotlib</span> inline
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="kn">as</span> <span class="nn">plt</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
 </pre></div>
 
     </div>
 </div>
 </div>
 
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p><strong>Nous avons besoin d'une fonction pour calculer la distance entre deux villes sur une sphère.</strong></p>
+
+</div>
+</div>
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
 <div class="prompt input_prompt">In&nbsp;[2]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython2"><pre><span></span><span class="k">def</span> <span class="nf">fitness</span><span class="p">(</span><span class="n">chromosome</span><span class="p">):</span>
-    <span class="n">score</span> <span class="o">=</span> <span class="mf">0.0</span>
-    <span class="n">values</span> <span class="o">=</span> <span class="p">[]</span>
-    <span class="c1"># iterate over the chromosome</span>
-    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="nb">len</span><span class="p">(</span><span class="n">chromosome</span><span class="p">),</span><span class="mi">4</span><span class="p">):</span>
-        <span class="n">value</span> <span class="o">=</span> <span class="n">chromosome</span><span class="p">[</span><span class="n">i</span><span class="o">+</span><span class="mi">3</span><span class="p">]</span><span class="o">+</span><span class="n">chromosome</span><span class="p">[</span><span class="n">i</span><span class="o">+</span><span class="mi">2</span><span class="p">]</span><span class="o">*</span><span class="mi">2</span><span class="o">+</span><span class="n">chromosome</span><span class="p">[</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">]</span><span class="o">*</span><span class="mi">4</span><span class="o">+</span><span class="n">chromosome</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">*</span><span class="mi">8</span>
-        <span class="k">if</span> <span class="p">(</span><span class="n">value</span> <span class="o">==</span> <span class="mi">0</span><span class="p">):</span>
-            <span class="n">value</span> <span class="o">=</span> <span class="mi">16</span>
-        <span class="n">values</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
-    <span class="n">score</span> <span class="o">=</span> <span class="p">(</span><span class="n">values</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">*</span><span class="n">values</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">*</span><span class="n">values</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="o">*</span><span class="n">values</span><span class="p">[</span><span class="mi">3</span><span class="p">])</span><span class="o">/</span><span class="p">(</span><span class="n">values</span><span class="p">[</span><span class="mi">4</span><span class="p">]</span><span class="o">*</span><span class="n">values</span><span class="p">[</span><span class="mi">5</span><span class="p">]</span><span class="o">*</span><span class="n">values</span><span class="p">[</span><span class="mi">6</span><span class="p">]</span><span class="o">*</span><span class="n">values</span><span class="p">[</span><span class="mi">7</span><span class="p">])</span>
-    <span class="k">return</span> <span class="n">score</span>
+<div class=" highlight hl-ipython2"><pre><span></span><span class="k">def</span> <span class="nf">distance_between_two_cities</span><span class="p">(</span><span class="n">city_1</span><span class="p">,</span> <span class="n">city_2</span><span class="p">):</span>
+
+    <span class="k">return</span> <span class="n">geopy</span><span class="o">.</span><span class="n">distance</span><span class="o">.</span><span class="n">vincenty</span><span class="p">(</span><span class="n">city_1</span><span class="p">,</span> <span class="n">city_2</span><span class="p">)</span><span class="o">.</span><span class="n">km</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p><strong>Nous avons les latitudes et longitudes de nos 14 villes</strong></p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[3]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython2"><pre><span></span><span class="n">LAT</span> <span class="o">=</span> <span class="p">[</span><span class="mf">16.47</span><span class="p">,</span> <span class="mf">16.47</span><span class="p">,</span> <span class="mf">20.09</span><span class="p">,</span> <span class="mf">22.39</span><span class="p">,</span> <span class="mf">25.23</span><span class="p">,</span> <span class="mf">22.00</span><span class="p">,</span> <span class="mf">20.47</span><span class="p">,</span> <span class="mf">17.20</span><span class="p">,</span> <span class="mf">16.30</span><span class="p">,</span> <span class="mf">14.05</span><span class="p">,</span> <span class="mf">16.53</span><span class="p">,</span> <span class="mf">21.52</span><span class="p">,</span> <span class="mf">19.41</span><span class="p">,</span> <span class="mf">20.09</span><span class="p">]</span>
+<span class="n">LON</span> <span class="o">=</span> <span class="p">[</span><span class="mf">96.10</span><span class="p">,</span> <span class="mf">94.44</span><span class="p">,</span> <span class="mf">92.54</span><span class="p">,</span> <span class="mf">93.37</span><span class="p">,</span> <span class="mf">97.24</span><span class="p">,</span> <span class="mf">96.05</span><span class="p">,</span> <span class="mf">97.02</span><span class="p">,</span> <span class="mf">96.29</span><span class="p">,</span> <span class="mf">97.38</span><span class="p">,</span> <span class="mf">98.12</span><span class="p">,</span> <span class="mf">97.38</span><span class="p">,</span> <span class="mf">95.59</span><span class="p">,</span> <span class="mf">97.13</span><span class="p">,</span> <span class="mf">94.55</span><span class="p">]</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p><strong>Ensuite, d'une liste de nos villes</strong></p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[4]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython2"><pre><span></span><span class="n">cities</span> <span class="o">=</span> <span class="p">[]</span>
+
+<span class="k">for</span> <span class="n">index</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">LAT</span><span class="p">)):</span>
+    <span class="n">cities</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">LAT</span><span class="p">[</span><span class="n">index</span><span class="p">],</span> <span class="n">LON</span><span class="p">[</span><span class="n">index</span><span class="p">]))</span>
+
+<span class="n">cities_nb</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">cities</span><span class="p">)</span>
 </pre></div>
 
     </div>
@@ -13154,36 +13219,10 @@ div#notebook {
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[3]:</div>
+<div class="prompt input_prompt">In&nbsp;[5]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython2"><pre><span></span><span class="c1"># Chromosome representation</span>
-
-<span class="c1"># genome = bitstring</span>
-<span class="n">genome</span> <span class="o">=</span> <span class="n">G1DBinaryString</span><span class="o">.</span><span class="n">G1DBinaryString</span><span class="p">(</span><span class="mi">32</span><span class="p">)</span>
-
-<span class="c1"># how to compute the fitness</span>
-<span class="n">genome</span><span class="o">.</span><span class="n">evaluator</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">fitness</span><span class="p">)</span>
-
-<span class="c1"># GA initialisation</span>
-<span class="n">ga</span> <span class="o">=</span> <span class="n">GSimpleGA</span><span class="o">.</span><span class="n">GSimpleGA</span><span class="p">(</span><span class="n">genome</span><span class="p">,</span> <span class="n">seed</span><span class="o">=</span><span class="mi">999</span><span class="p">)</span>
-<span class="n">ga</span><span class="o">.</span><span class="n">setPopulationSize</span><span class="p">(</span><span class="mi">100</span><span class="p">)</span>
-<span class="n">ga</span><span class="o">.</span><span class="n">setMutationRate</span><span class="p">(</span><span class="mf">0.01</span><span class="p">)</span>
-<span class="n">ga</span><span class="o">.</span><span class="n">setCrossoverRate</span><span class="p">(</span><span class="mf">0.9</span><span class="p">)</span>
-<span class="n">ga</span><span class="o">.</span><span class="n">selector</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">Selectors</span><span class="o">.</span><span class="n">GTournamentSelector</span><span class="p">)</span>
-<span class="n">ga</span><span class="o">.</span><span class="n">setElitism</span><span class="p">(</span><span class="bp">True</span><span class="p">)</span>
-
-<span class="c1"># Number of generations</span>
-<span class="n">ga</span><span class="o">.</span><span class="n">setGenerations</span><span class="p">(</span><span class="mi">100</span><span class="p">)</span>
-
-<span class="c1"># In case we want to monitor the evolution process</span>
-<span class="c1"># execute the function current_best every generation</span>
-<span class="c1">#ga.stepCallback.set(current_best)</span>
-
-<span class="n">ga</span><span class="o">.</span><span class="n">evolve</span><span class="p">(</span><span class="n">freq_stats</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
-
-<span class="c1"># Final best solution</span>
-<span class="k">print</span><span class="p">(</span><span class="n">ga</span><span class="o">.</span><span class="n">bestIndividual</span><span class="p">())</span>
+<div class=" highlight hl-ipython2"><pre><span></span><span class="k">print</span><span class="p">(</span><span class="s2">&quot;Il y a {} points&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">cities_nb</span><span class="p">))</span>
 </pre></div>
 
     </div>
@@ -13200,49 +13239,770 @@ div#notebook {
 
 
 <div class="output_subarea output_stream output_stdout output_text">
-<pre>Gen. 0 (0.00%): Max/Min/Avg Fitness(Raw) [7.45(214.00)/6.17(0.00)/6.21(6.21)]
-Gen. 10 (10.00%): Max/Min/Avg Fitness(Raw) [3461.15(40320.00)/2840.97(73.00)/2884.29(2884.29)]
-Gen. 20 (20.00%): Max/Min/Avg Fitness(Raw) [41544.47(50400.00)/19526.41(222.00)/34620.39(34620.39)]
-Gen. 30 (30.00%): Max/Min/Avg Fitness(Raw) [54050.52(54000.00)/0.00(275.00)/45662.24(45662.24)]
-Gen. 40 (40.00%): Max/Min/Avg Fitness(Raw) [54104.86(54000.00)/0.00(488.00)/44534.93(44534.93)]
-Gen. 50 (50.00%): Max/Min/Avg Fitness(Raw) [54194.15(54000.00)/0.00(880.00)/44398.75(44398.75)]
-Gen. 60 (60.00%): Max/Min/Avg Fitness(Raw) [54563.65(54000.00)/0.00(3375.00)/46755.15(46755.15)]
-Gen. 70 (70.00%): Max/Min/Avg Fitness(Raw) [54905.62(54000.00)/0.00(3375.00)/43289.62(43289.62)]
-Gen. 80 (80.00%): Max/Min/Avg Fitness(Raw) [54103.83(54000.00)/0.00(675.00)/46891.00(46891.00)]
-Gen. 90 (90.00%): Max/Min/Avg Fitness(Raw) [54423.79(54000.00)/0.00(3375.00)/48352.35(48352.35)]
-Gen. 100 (100.00%): Max/Min/Avg Fitness(Raw) [54065.85(54000.00)/0.00(210.00)/41159.70(41159.70)]
-Total time elapsed: 0.967 seconds.
-- GenomeBase
-	Score:			 54000.000000
-	Fitness:		 54065.848175
-
-	Params:		 {}
-
-	Slot [Evaluator] (Count: 1)
-		Name: fitness - Weight: 0.50
-	Slot [Initializator] (Count: 1)
-		Name: G1DBinaryStringInitializator - Weight: 0.50
-		Doc:  1D Binary String initializator 
-	Slot [Mutator] (Count: 1)
-		Name: G1DBinaryStringMutatorFlip - Weight: 0.50
-		Doc:  The classical flip mutator for binary strings 
-	Slot [Crossover] (Count: 1)
-		Name: G1DBinaryStringXSinglePoint - Weight: 0.50
-		Doc:  The crossover of 1D Binary String, Single Point
-
-   .. warning:: You can&#39;t use this crossover method for binary strings with length of 1.
-
-   
-
-- G1DBinaryString
-	String length:	 32
-	String:		 11111111111100000001000100010001
-
-
+<pre>Il y a 14 points
 </pre>
 </div>
 </div>
 
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[6]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython2"><pre><span></span><span class="n">map_coords_to_city</span> <span class="o">=</span> <span class="p">{}</span>
+<span class="n">map_city_to_coords</span> <span class="o">=</span> <span class="p">{}</span>
+
+<span class="k">for</span> <span class="n">city</span><span class="p">,</span> <span class="n">coords</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">cities</span><span class="p">):</span>
+    <span class="n">map_coords_to_city</span><span class="p">[</span><span class="n">coords</span><span class="p">]</span> <span class="o">=</span> <span class="n">city</span>
+    <span class="n">map_city_to_coords</span><span class="p">[</span><span class="n">city</span><span class="p">]</span> <span class="o">=</span> <span class="n">coords</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[7]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython2"><pre><span></span><span class="n">map_coords_to_city</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+    <div class="prompt output_prompt">Out[7]:</div>
+
+
+
+
+<div class="output_text output_subarea output_execute_result">
+<pre>{(14.05, 98.12): 9,
+ (16.3, 97.38): 8,
+ (16.47, 94.44): 1,
+ (16.47, 96.1): 0,
+ (16.53, 97.38): 10,
+ (17.2, 96.29): 7,
+ (19.41, 97.13): 12,
+ (20.09, 92.54): 2,
+ (20.09, 94.55): 13,
+ (20.47, 97.02): 6,
+ (21.52, 95.59): 11,
+ (22.0, 96.05): 5,
+ (22.39, 93.37): 3,
+ (25.23, 97.24): 4}</pre>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[8]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython2"><pre><span></span><span class="n">map_city_to_coords</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+    <div class="prompt output_prompt">Out[8]:</div>
+
+
+
+
+<div class="output_text output_subarea output_execute_result">
+<pre>{0: (16.47, 96.1),
+ 1: (16.47, 94.44),
+ 2: (20.09, 92.54),
+ 3: (22.39, 93.37),
+ 4: (25.23, 97.24),
+ 5: (22.0, 96.05),
+ 6: (20.47, 97.02),
+ 7: (17.2, 96.29),
+ 8: (16.3, 97.38),
+ 9: (14.05, 98.12),
+ 10: (16.53, 97.38),
+ 11: (21.52, 95.59),
+ 12: (19.41, 97.13),
+ 13: (20.09, 94.55)}</pre>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Nous allons remplir une matrice de toutes les distances</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[9]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython2"><pre><span></span><span class="n">distances</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">empty</span><span class="p">((</span><span class="n">cities_nb</span><span class="p">,</span><span class="n">cities_nb</span><span class="p">),</span><span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span>
+
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">cities_nb</span><span class="p">):</span>
+    <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">cities_nb</span><span class="p">):</span>
+        <span class="n">distances</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">j</span><span class="p">]</span> <span class="o">=</span> <span class="n">distance_between_two_cities</span><span class="p">(</span><span class="n">map_city_to_coords</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">map_city_to_coords</span><span class="p">[</span><span class="n">j</span><span class="p">])</span>
+
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">cities_nb</span><span class="p">):</span>
+    <span class="n">distances</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">Infinity</span>
+        
+<span class="n">distances</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stderr output_text">
+<pre>c:\users\vincent guidoux\anaconda3\envs\python27\lib\site-packages\ipykernel_launcher.py:3: DeprecationWarning: Vincenty is deprecated and is going to be removed in geopy 2.0. Use `geopy.distance.geodesic` (or the default `geopy.distance.distance`) instead, which is more accurate and always converges.
+  This is separate from the ipykernel package so we can avoid doing imports until
+</pre>
+</div>
+</div>
+
+<div class="output_area">
+
+    <div class="prompt output_prompt">Out[9]:</div>
+
+
+
+
+<div class="output_text output_subarea output_execute_result">
+<pre>array([[          inf,  177.25529289,  549.69797241,  715.23136882,
+         977.08809767,  612.16906546,  453.27693899,   83.28646194,
+         138.02637295,  344.64296012,  136.81909176,  561.5687481 ,
+         343.20248949,  432.88513714],
+       [ 177.25529289,           inf,  448.20030869,  664.88499417,
+        1012.59214777,  635.09749238,  519.84490674,  213.07693554,
+         314.6315004 ,  477.4274839 ,  313.95403982,  571.95104846,
+         432.52008727,  400.84443405],
+       [ 549.69797241,  448.20030869,           inf,  268.83362232,
+         746.37501598,  421.65770688,  469.85601377,  508.76031818,
+         661.80599804,  893.97228288,  645.71717911,  354.78740387,
+         486.91929058,  210.21956773],
+       [ 715.23136882,  664.88499417,  268.83362232,           inf,
+         504.3761671 ,  279.71214503,  433.99291131,  650.86440952,
+         794.83657799, 1050.69181769,  773.21585314,  248.7227221 ,
+         511.69134971,  282.57793114],
+       [ 977.08809767, 1012.59214777,  746.37501598,  504.3761671 ,
+                  inf,  377.77511813,  527.61662717,  894.53210934,
+         988.79818784, 1241.076379  ,  963.34837604,  444.14412752,
+         644.57895958,  632.73066477],
+       [ 612.16906546,  635.09749238,  421.65770688,  279.71214503,
+         377.77511813,           inf,  197.06615365,  531.95496072,
+         646.26846954,  906.75670678,  621.42279943,   71.33483932,
+         308.02423959,  262.7242436 ],
+       [ 453.27693899,  519.84490674,  469.85601377,  433.99291131,
+         527.61662717,  197.06615365,           inf,  370.04129549,
+         463.12152799,  720.07227292,  437.75789531,  188.73316387,
+         117.90943138,  261.42227363],
+       [  83.28646194,  213.07693554,  508.76031818,  650.86440952,
+         894.53210934,  531.95496072,  370.04129549,           inf,
+         153.06009248,  399.99029039,  137.80049583,  483.82882722,
+         260.23077389,  368.81598997],
+       [ 138.02637295,  314.6315004 ,  661.80599804,  794.83657799,
+         988.79818784,  646.26846954,  463.12152799,  153.06009248,
+                  inf,  261.35361581,   25.45249149,  607.77562732,
+         345.22965582,  515.319257  ],
+       [ 344.64296012,  477.4274839 ,  893.97228288, 1050.69181769,
+        1241.076379  ,  906.75670678,  720.07227292,  399.99029039,
+         261.35361581,           inf,  285.69206083,  869.12923088,
+         602.48796725,  768.80620329],
+       [ 136.81909176,  313.95403982,  645.71717911,  773.21585314,
+         963.34837604,  621.42279943,  437.75789531,  137.80049583,
+          25.45249149,  285.69206083,           inf,  583.59205269,
+         319.85682276,  494.70681624],
+       [ 561.5687481 ,  571.95104846,  354.78740387,  248.7227221 ,
+         444.14412752,   71.33483932,  188.73316387,  483.82882722,
+         607.77562732,  869.12923088,  583.59205269,           inf,
+         283.51616619,  191.79954509],
+       [ 343.20248949,  432.52008727,  486.91929058,  511.69134971,
+         644.57895958,  308.02423959,  117.90943138,  260.23077389,
+         345.22965582,  602.48796725,  319.85682276,  283.51616619,
+                  inf,  280.69071413],
+       [ 432.88513714,  400.84443405,  210.21956773,  282.57793114,
+         632.73066477,  262.7242436 ,  261.42227363,  368.81598997,
+         515.319257  ,  768.80620329,  494.70681624,  191.79954509,
+         280.69071413,           inf]])</pre>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[10]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython2"><pre><span></span><span class="c1"># from mpl_toolkits.basemap import Basemap</span>
+<span class="c1"># import matplotlib.pyplot as plt</span>
+<span class="c1"># import numpy as np</span>
+
+<span class="c1"># # make sure the value of resolution is a lowercase L,</span>
+<span class="c1"># #  for &#39;low&#39;, not a numeral 1</span>
+<span class="c1"># map = Basemap(projection=&#39;merc&#39;, lat_0=57, lon_0=-135,</span>
+<span class="c1">#     resolution = &#39;h&#39;, area_thresh = 1000.0,</span>
+<span class="c1">#     llcrnrlon=-136.25, llcrnrlat=56,</span>
+<span class="c1">#     urcrnrlon=-134.25, urcrnrlat=57.75)</span>
+
+<span class="c1"># map.drawcoastlines()</span>
+<span class="c1"># map.drawcountries()</span>
+<span class="c1"># map.fillcontinents(color=&#39;coral&#39;)</span>
+<span class="c1"># map.drawmapboundary()</span>
+
+<span class="c1"># map.drawmeridians(np.arange(0, 360, 30))</span>
+<span class="c1"># map.drawparallels(np.arange(-90, 90, 30))</span>
+
+<span class="c1"># plt.show()</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[13]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython2"><pre><span></span><span class="c1"># print(&quot;Il y a {} arêtes&quot;.format(edges_nb))</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[14]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython2"><pre><span></span><span class="c1"># ord(&#39;A&#39;)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[16]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython2"><pre><span></span><span class="k">def</span> <span class="nf">G1DListTSPInitializator</span><span class="p">(</span><span class="n">genome</span><span class="p">,</span> <span class="o">**</span><span class="n">args</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; The initializator for the TSP &quot;&quot;&quot;</span>
+    <span class="n">genome</span><span class="o">.</span><span class="n">clearList</span><span class="p">()</span>
+    <span class="n">lst</span> <span class="o">=</span> <span class="p">[</span><span class="n">i</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">xrange</span><span class="p">(</span><span class="n">cities_nb</span><span class="p">)]</span>
+
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">xrange</span><span class="p">(</span><span class="n">cities_nb</span><span class="p">):</span>
+        <span class="n">choice</span> <span class="o">=</span> <span class="n">random</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span><span class="n">lst</span><span class="p">)</span>
+        <span class="n">lst</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">choice</span><span class="p">)</span>
+        <span class="n">genome</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">choice</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Pour quelques particularités comme les allèles et les initialisateurs, nous nous sommes inspirés de cela :</p>
+<p><a href="http://pyevolve.sourceforge.net/0_6rc1/examples.html">Pyevolve v0.6rc1 documentation - Example 12 - The Travelling Salesman Problem</a></p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[17]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython2"><pre><span></span><span class="k">def</span> <span class="nf">fitness</span><span class="p">(</span><span class="n">chromosome</span><span class="p">):</span>
+<span class="c1">#     print(&quot;CHROMOSOME : &quot;, chromosome)</span>
+    
+    <span class="sd">&quot;&quot;&quot; Returns the total length of the parcour &quot;&quot;&quot;</span>
+    <span class="n">total</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">cities_nb</span><span class="p">):</span>
+        <span class="n">j</span> <span class="o">=</span> <span class="p">(</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span> <span class="o">%</span> <span class="n">cities_nb</span> <span class="c1"># pour faire le tour complet</span>
+        <span class="n">city_i</span> <span class="o">=</span> <span class="n">chromosome</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+        <span class="n">city_j</span> <span class="o">=</span> <span class="n">chromosome</span><span class="p">[</span><span class="n">j</span><span class="p">]</span>
+        <span class="n">total</span> <span class="o">+=</span> <span class="n">distances</span><span class="p">[</span><span class="n">city_i</span><span class="p">,</span><span class="n">city_j</span><span class="p">]</span>
+    <span class="k">return</span> <span class="n">total</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[&nbsp;]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython2"><pre><span></span><span class="c1"># Chromosome representation</span>
+
+<span class="n">crossoverRate_list</span> <span class="o">=</span> <span class="p">[</span><span class="mf">0.85</span><span class="p">,</span> <span class="mf">0.9</span><span class="p">,</span> <span class="mf">0.95</span><span class="p">]</span>
+<span class="n">mutationRate_list</span> <span class="o">=</span> <span class="p">[</span><span class="mf">0.01</span><span class="p">,</span> <span class="mf">0.02</span><span class="p">,</span> <span class="mf">0.03</span><span class="p">,</span> <span class="mf">0.04</span><span class="p">,</span> <span class="mf">0.05</span><span class="p">]</span>
+<span class="n">populationSize_list</span> <span class="o">=</span> <span class="p">[</span><span class="mi">50</span><span class="p">,</span> <span class="mi">80</span><span class="p">,</span> <span class="mi">100</span><span class="p">,</span> <span class="mi">500</span><span class="p">]</span>
+<span class="n">generation_list</span> <span class="o">=</span> <span class="p">[</span><span class="mi">80</span><span class="p">,</span> <span class="mi">100</span><span class="p">,</span> <span class="mi">120</span><span class="p">]</span>
+
+<span class="n">min_somme</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">Infinity</span>
+<span class="n">min_config</span> <span class="o">=</span> <span class="bp">None</span>
+
+<span class="k">for</span> <span class="n">h</span> <span class="ow">in</span> <span class="n">crossoverRate_list</span><span class="p">:</span>
+    <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="n">mutationRate_list</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">populationSize_list</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">l</span> <span class="ow">in</span> <span class="n">generation_list</span><span class="p">:</span>
+                <span class="n">somme</span> <span class="o">=</span> <span class="p">[]</span>
+                <span class="k">for</span> <span class="n">m</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">20</span><span class="p">):</span>
+                
+                    <span class="c1"># set the alleles to the cities numbers</span>
+                    <span class="n">setOfAlleles</span> <span class="o">=</span> <span class="n">GAllele</span><span class="o">.</span><span class="n">GAlleles</span><span class="p">(</span><span class="n">homogeneous</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+                    <span class="n">lst</span> <span class="o">=</span> <span class="p">[</span> <span class="n">i</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">xrange</span><span class="p">((</span><span class="n">cities_nb</span><span class="p">))</span> <span class="p">]</span>
+                    <span class="n">a</span> <span class="o">=</span> <span class="n">GAllele</span><span class="o">.</span><span class="n">GAlleleList</span><span class="p">(</span><span class="n">lst</span><span class="p">)</span>
+                    <span class="n">setOfAlleles</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">a</span><span class="p">)</span>
+
+                    <span class="n">genome</span> <span class="o">=</span> <span class="n">G1DList</span><span class="o">.</span><span class="n">G1DList</span><span class="p">((</span><span class="n">cities_nb</span><span class="p">))</span>
+                    <span class="n">genome</span><span class="o">.</span><span class="n">setParams</span><span class="p">(</span><span class="n">allele</span><span class="o">=</span><span class="n">setOfAlleles</span><span class="p">)</span>
+
+                    <span class="n">genome</span><span class="o">.</span><span class="n">evaluator</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">fitness</span><span class="p">)</span>
+                    <span class="n">genome</span><span class="o">.</span><span class="n">mutator</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">Mutators</span><span class="o">.</span><span class="n">G1DListMutatorSwap</span><span class="p">)</span>
+                    <span class="n">genome</span><span class="o">.</span><span class="n">crossover</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">Crossovers</span><span class="o">.</span><span class="n">G1DListCrossoverOX</span><span class="p">)</span>
+                    <span class="n">genome</span><span class="o">.</span><span class="n">initializator</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">G1DListTSPInitializator</span><span class="p">)</span>
+
+                    <span class="c1"># GA initialisation</span>
+
+                    <span class="n">ga</span> <span class="o">=</span> <span class="n">GSimpleGA</span><span class="o">.</span><span class="n">GSimpleGA</span><span class="p">(</span><span class="n">genome</span><span class="p">)</span>
+                    <span class="n">ga</span><span class="o">.</span><span class="n">setMinimax</span><span class="p">(</span><span class="n">Consts</span><span class="o">.</span><span class="n">minimaxType</span><span class="p">[</span><span class="s2">&quot;minimize&quot;</span><span class="p">])</span>
+                    <span class="n">ga</span><span class="o">.</span><span class="n">setCrossoverRate</span><span class="p">(</span><span class="n">h</span><span class="p">)</span>
+                    <span class="n">ga</span><span class="o">.</span><span class="n">setMutationRate</span><span class="p">(</span><span class="n">j</span><span class="p">)</span>
+                    <span class="n">ga</span><span class="o">.</span><span class="n">setPopulationSize</span><span class="p">(</span><span class="n">k</span><span class="p">)</span>
+
+                    <span class="c1"># Number of generations</span>
+
+                    <span class="n">ga</span><span class="o">.</span><span class="n">setGenerations</span><span class="p">(</span><span class="n">l</span><span class="p">)</span>
+
+                    <span class="c1"># In case we want to monitor the evolution process</span>
+                    <span class="c1"># execute the function current_best every generation</span>
+                    <span class="c1">#ga.stepCallback.set(current_best)</span>
+
+                    <span class="n">ga</span><span class="o">.</span><span class="n">evolve</span><span class="p">(</span><span class="n">freq_stats</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+
+                    <span class="n">somme</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">tour_length</span><span class="p">(</span><span class="n">ga</span><span class="o">.</span><span class="n">bestIndividual</span><span class="p">()))</span>
+                    
+                <span class="n">current_somme</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">somme</span><span class="p">)</span>
+                <span class="k">print</span><span class="p">(</span><span class="n">h</span><span class="p">,</span> <span class="n">j</span><span class="p">,</span> <span class="n">k</span><span class="p">,</span> <span class="n">l</span><span class="p">,</span> <span class="n">current_somme</span><span class="p">)</span>
+                <span class="k">if</span> <span class="n">current_somme</span> <span class="o">&lt;</span> <span class="n">min_somme</span><span class="p">:</span>
+                    <span class="n">min_somme</span> <span class="o">=</span> <span class="n">current_somme</span>
+                    <span class="n">min_config</span> <span class="o">=</span> <span class="p">(</span><span class="n">h</span><span class="p">,</span> <span class="n">j</span><span class="p">,</span> <span class="n">k</span><span class="p">,</span> <span class="n">l</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>(0.85, 0.01, 50, 80, 3626.8693589056174)
+(0.85, 0.01, 50, 100, 3596.969519480802)
+(0.85, 0.01, 50, 120, 3729.3704579559744)
+(0.85, 0.01, 80, 80, 3520.5506431474437)
+(0.85, 0.01, 80, 100, 3657.4125429527185)
+(0.85, 0.01, 80, 120, 3660.766120538501)
+(0.85, 0.01, 100, 80, 3513.8434213585374)
+(0.85, 0.01, 100, 100, 3619.4165382891597)
+(0.85, 0.01, 100, 120, 3528.9544288494153)
+(0.85, 0.01, 500, 80, 3471.9577640862008)
+(0.85, 0.01, 500, 100, 3475.060775833824)
+(0.85, 0.01, 500, 120, 3509.7577197603546)
+(0.85, 0.02, 50, 80, 3603.342616984714)
+(0.85, 0.02, 50, 100, 3578.7503471151576)
+(0.85, 0.02, 50, 120, 3517.049925939738)
+(0.85, 0.02, 80, 80, 3531.685663419116)
+(0.85, 0.02, 80, 100, 3442.4790481423756)
+(0.85, 0.02, 80, 120, 3589.919637276238)
+(0.85, 0.02, 100, 80, 3465.909813565378)
+(0.85, 0.02, 100, 100, 3515.5064220198983)
+(0.85, 0.02, 100, 120, 3479.7441672268897)
+(0.85, 0.02, 500, 80, 3498.47156251702)
+(0.85, 0.02, 500, 100, 3398.1671493889)
+(0.85, 0.02, 500, 120, 3449.4484111270185)
+(0.85, 0.03, 50, 80, 3544.675591383572)
+(0.85, 0.03, 50, 100, 3444.9095370927266)
+(0.85, 0.03, 50, 120, 3459.0277765422557)
+(0.85, 0.03, 80, 80, 3529.436140697441)
+(0.85, 0.03, 80, 100, 3538.0085447853344)
+(0.85, 0.03, 80, 120, 3529.1482497911666)
+(0.85, 0.03, 100, 80, 3564.1510003214157)
+(0.85, 0.03, 100, 100, 3434.14951012972)
+(0.85, 0.03, 100, 120, 3425.1266345680306)
+(0.85, 0.03, 500, 80, 3421.0683358929628)
+(0.85, 0.03, 500, 100, 3401.6352443233422)
+(0.85, 0.03, 500, 120, 3413.027235162395)
+(0.85, 0.04, 50, 80, 3593.5077722684596)
+(0.85, 0.04, 50, 100, 3584.833643271178)
+(0.85, 0.04, 50, 120, 3545.2594361371293)
+(0.85, 0.04, 80, 80, 3472.273592824684)
+(0.85, 0.04, 80, 100, 3465.8120781423786)
+(0.85, 0.04, 80, 120, 3450.3435423326127)
+(0.85, 0.04, 100, 80, 3499.6676688583298)
+(0.85, 0.04, 100, 100, 3428.251586576943)
+(0.85, 0.04, 100, 120, 3469.8252575107413)
+(0.85, 0.04, 500, 80, 3396.533713187714)
+(0.85, 0.04, 500, 100, 3372.9879962719074)
+(0.85, 0.04, 500, 120, 3395.5818395724154)
+(0.85, 0.05, 50, 80, 3551.7136567582065)
+(0.85, 0.05, 50, 100, 3457.8278612463664)
+(0.85, 0.05, 50, 120, 3466.303675572116)
+(0.85, 0.05, 80, 80, 3468.405124123184)
+(0.85, 0.05, 80, 100, 3428.9580014018597)
+(0.85, 0.05, 80, 120, 3437.3146102254223)
+(0.85, 0.05, 100, 80, 3540.307313035497)
+(0.85, 0.05, 100, 100, 3433.1249680738338)
+(0.85, 0.05, 100, 120, 3503.6593975394317)
+(0.85, 0.05, 500, 80, 3384.577301554678)
+(0.85, 0.05, 500, 100, 3397.90993853117)
+(0.85, 0.05, 500, 120, 3392.8480832928085)
+(0.9, 0.01, 50, 80, 3566.6847115262876)
+(0.9, 0.01, 50, 100, 3617.4537940985674)
+(0.9, 0.01, 50, 120, 3609.077485374141)
+(0.9, 0.01, 80, 80, 3566.185194498551)
+(0.9, 0.01, 80, 100, 3565.21475610068)
+(0.9, 0.01, 80, 120, 3493.682687933508)
+(0.9, 0.01, 100, 80, 3601.496676037654)
+(0.9, 0.01, 100, 100, 3730.0265176607018)
+(0.9, 0.01, 100, 120, 3559.0237954265076)
+(0.9, 0.01, 500, 80, 3498.5786493757173)
+(0.9, 0.01, 500, 100, 3515.415377696191)
+</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[&nbsp;]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython2"><pre><span></span><span class="c1"># min_somme</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[&nbsp;]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython2"><pre><span></span><span class="c1"># min_config</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[&nbsp;]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython2"><pre><span></span><span class="c1"># set the alleles to the cities numbers</span>
+<span class="n">setOfAlleles</span> <span class="o">=</span> <span class="n">GAllele</span><span class="o">.</span><span class="n">GAlleles</span><span class="p">(</span><span class="n">homogeneous</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+<span class="n">lst</span> <span class="o">=</span> <span class="p">[</span> <span class="n">i</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">xrange</span><span class="p">((</span><span class="n">cities_nb</span><span class="p">))</span> <span class="p">]</span>
+<span class="n">a</span> <span class="o">=</span> <span class="n">GAllele</span><span class="o">.</span><span class="n">GAlleleList</span><span class="p">(</span><span class="n">lst</span><span class="p">)</span>
+<span class="n">setOfAlleles</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">a</span><span class="p">)</span>
+
+<span class="n">genome</span> <span class="o">=</span> <span class="n">G1DList</span><span class="o">.</span><span class="n">G1DList</span><span class="p">((</span><span class="n">cities_nb</span><span class="p">))</span>
+<span class="n">genome</span><span class="o">.</span><span class="n">setParams</span><span class="p">(</span><span class="n">allele</span><span class="o">=</span><span class="n">setOfAlleles</span><span class="p">)</span>
+
+<span class="n">genome</span><span class="o">.</span><span class="n">evaluator</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">fitness</span><span class="p">)</span>
+<span class="n">genome</span><span class="o">.</span><span class="n">mutator</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">Mutators</span><span class="o">.</span><span class="n">G1DListMutatorSwap</span><span class="p">)</span>
+<span class="n">genome</span><span class="o">.</span><span class="n">crossover</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">Crossovers</span><span class="o">.</span><span class="n">G1DListCrossoverOX</span><span class="p">)</span>
+<span class="n">genome</span><span class="o">.</span><span class="n">initializator</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">G1DListTSPInitializator</span><span class="p">)</span>
+
+<span class="c1"># GA initialisation</span>
+
+<span class="n">ga</span> <span class="o">=</span> <span class="n">GSimpleGA</span><span class="o">.</span><span class="n">GSimpleGA</span><span class="p">(</span><span class="n">genome</span><span class="p">)</span>
+<span class="n">ga</span><span class="o">.</span><span class="n">setMinimax</span><span class="p">(</span><span class="n">Consts</span><span class="o">.</span><span class="n">minimaxType</span><span class="p">[</span><span class="s2">&quot;minimize&quot;</span><span class="p">])</span>
+<span class="n">ga</span><span class="o">.</span><span class="n">setCrossoverRate</span><span class="p">(</span><span class="mf">0.9</span><span class="p">)</span>
+<span class="n">ga</span><span class="o">.</span><span class="n">setMutationRate</span><span class="p">(</span><span class="mf">0.05</span><span class="p">)</span>
+<span class="n">ga</span><span class="o">.</span><span class="n">setPopulationSize</span><span class="p">(</span><span class="mi">80</span><span class="p">)</span>
+
+<span class="c1"># Number of generations</span>
+
+<span class="n">ga</span><span class="o">.</span><span class="n">setGenerations</span><span class="p">(</span><span class="mi">100</span><span class="p">)</span>
+
+<span class="n">sqlite_adapter</span> <span class="o">=</span> <span class="n">DBAdapters</span><span class="o">.</span><span class="n">DBSQLite</span><span class="p">(</span><span class="n">identify</span><span class="o">=</span><span class="s2">&quot;GuidouxHochet_TSV&quot;</span><span class="p">)</span>
+<span class="n">ga</span><span class="o">.</span><span class="n">setDBAdapter</span><span class="p">(</span><span class="n">sqlite_adapter</span><span class="p">)</span>
+
+<span class="c1"># In case we want to monitor the evolution process</span>
+<span class="c1"># execute the function current_best every generation</span>
+<span class="c1">#ga.stepCallback.set(current_best)</span>
+
+<span class="n">ga</span><span class="o">.</span><span class="n">evolve</span><span class="p">(</span><span class="n">freq_stats</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+<span class="n">tour_length</span><span class="p">(</span><span class="n">ga</span><span class="o">.</span><span class="n">bestIndividual</span><span class="p">())</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[&nbsp;]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython2"><pre><span></span><span class="n">sol</span> <span class="o">=</span> <span class="n">ga</span><span class="o">.</span><span class="n">bestIndividual</span><span class="p">()</span>
+<span class="n">sol_lat</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="n">sol_long</span> <span class="o">=</span> <span class="p">[]</span>
+
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="nb">len</span><span class="p">(</span><span class="n">sol</span><span class="p">)):</span>
+    <span class="n">sol_lat</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">map_city_to_coords</span><span class="p">[</span><span class="n">sol</span><span class="p">[</span><span class="n">i</span><span class="p">]][</span><span class="mi">0</span><span class="p">])</span>
+    <span class="n">sol_long</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">map_city_to_coords</span><span class="p">[</span><span class="n">sol</span><span class="p">[</span><span class="n">i</span><span class="p">]][</span><span class="mi">1</span><span class="p">])</span>
+    
+
+<span class="n">sol_lat</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">map_city_to_coords</span><span class="p">[</span><span class="n">sol</span><span class="p">[</span><span class="mi">0</span><span class="p">]][</span><span class="mi">0</span><span class="p">])</span>
+<span class="n">sol_long</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">map_city_to_coords</span><span class="p">[</span><span class="n">sol</span><span class="p">[</span><span class="mi">0</span><span class="p">]][</span><span class="mi">1</span><span class="p">])</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s2">&quot;Longitudes&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s2">&quot;Latitudes&quot;</span><span class="p">)</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">sol_long</span><span class="p">,</span> <span class="n">sol_lat</span><span class="p">,</span> <span class="s1">&#39;-o&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[&nbsp;]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython2"><pre><span></span><span class="n">tour_length</span><span class="p">(</span><span class="n">ga</span><span class="o">.</span><span class="n">bestIndividual</span><span class="p">())</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[&nbsp;]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython2"><pre><span></span><span class="n">ga</span><span class="o">.</span><span class="n">bestIndividual</span><span class="p">()</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[&nbsp;]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython2"><pre><span></span><span class="o">%</span><span class="k">run</span> pyevolve_graph.py -i GuidouxHochet_TSV -8
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[&nbsp;]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython2"><pre><span></span><span class="o">%</span><span class="k">run</span> pyevolve_graph.py -i GuidouxHochet_TSV -1
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[&nbsp;]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython2"><pre><span></span><span class="c1"># from itertools import permutations </span>
+  
+<span class="c1"># # Get all permutations of [1, 2, 3] </span>
+<span class="c1"># perm = permutations(range(14)) </span>
+  
+<span class="c1"># i = 0    </span>
+<span class="c1"># # Print the obtained permutations </span>
+<span class="c1"># for i in list(perm): </span>
+<span class="c1">#     i += 1 </span>
+    
+<span class="c1"># print(i)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[&nbsp;]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython2"><pre><span></span><span class="n">best_order</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">13</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">11</span><span class="p">,</span> <span class="mi">6</span><span class="p">,</span> <span class="mi">12</span><span class="p">,</span> <span class="mi">7</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">8</span><span class="p">,</span> <span class="mi">9</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[&nbsp;]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython2"><pre><span></span><span class="c1"># import reverse_geocode </span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[&nbsp;]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython2"><pre><span></span><span class="c1"># for i, city in enumerate(best_order):</span>
+<span class="c1">#     coords = map_city_to_coords[city]</span>
+<span class="c1">#     town, code, country = reverse_geocode.search(coords)</span>
+<span class="c1">#     print(&quot;{} : {} - {}, {}&quot;.format(i, map_city_to_coords[city], town, country))</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[&nbsp;]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython2"><pre><span></span> 
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[&nbsp;]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython2"><pre><span></span> 
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[&nbsp;]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython2"><pre><span></span> 
+</pre></div>
+
+    </div>
 </div>
 </div>
 
